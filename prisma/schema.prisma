@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+/// directUrl = env("DIRECT_URL")
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+model Film {
+  id            Int       @id(map: "films_pkey") @default(autoincrement())
+  title         String    @db.VarChar(255)
+  released_date DateTime  @db.Date
+  director      String    @db.VarChar(255)
+  genre         String?   @db.VarChar(100)
+  duration      Int?
+  rating        Decimal?  @db.Decimal(2, 1)
+  language      String?   @db.VarChar(50)
+  country       String?   @db.VarChar(100)
+  synopsis      String?
+  budget        BigInt?
+  box_office    BigInt?
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  updated_at    DateTime? @default(now()) @db.Timestamp(6)
+}
