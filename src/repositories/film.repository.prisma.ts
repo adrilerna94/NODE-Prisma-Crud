@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, Film } from '@prisma/client';
+import { PrismaClient, Film } from '@prisma/client';
 import { BaseRepository, IRepositoryDelegate } from './base.repository.prisma';
 import { AppError } from '../utils/application.error';
 import { IFilm } from '../interfaces/film.interface';

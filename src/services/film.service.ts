@@ -4,7 +4,6 @@
 import logger from '../config/logger';
 import { FilmRepository } from '../repositories/film.repository.prisma';
 import { IFilm } from '../interfaces/film.interface';
-import { skip } from 'node:test';
 
 export class FilmService {
   private readonly filmRepository: FilmRepository;
