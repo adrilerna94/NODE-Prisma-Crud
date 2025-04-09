@@ -15,6 +15,27 @@ export class FilmController {
     this.filmService = new FilmService()
   }
 
+  create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    logger.debug('Controller: Received request to create a new film', { body: req.body });
+    try {
+      const film = await this.filmService.create(req.body);
+      const response = {
+        message: 'film created successfully',
+        data: film,
+      };
+      res.status(httpStatus.CREATED).send(response);
+    } catch (error) {
+      logger.debug({ body: req.body }, 'Controller: Error creating film');
+      if (!(error instanceof AppError)) {
+        error = new AppError('Error creating film', httpStatus.INTERNAL_SERVER_ERROR, {
+          body: req.body,
+          originalError: error,
+        });
+      }
+      next(error);
+    }
+  };
+
   getAll = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     logger.debug(`Controller: Received getAll request for films with query: ${JSON.stringify(req.query)}`)
     try {

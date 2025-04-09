@@ -1,12 +1,13 @@
-import { PrismaClient, Film } from '@prisma/client';
+import { PrismaClient, Prisma, Film } from '@prisma/client';
 import { BaseRepository, IRepositoryDelegate } from './base.repository.prisma';
 import { AppError } from '../utils/application.error';
 import { IFilm } from '../interfaces/film.interface';
+import { ICreateFilm } from '../interfaces/createFilm.interface';
 
 const prisma = new PrismaClient();
 
 export class FilmRepository {
-  private readonly baseRepository: BaseRepository<Film, IRepositoryDelegate<Film>>;
+  private readonly baseRepository: BaseRepository<Film, ICreateFilm,IRepositoryDelegate<Film>>;
 
   constructor() {
     this.baseRepository = new BaseRepository(prisma.film as unknown as IRepositoryDelegate<Film>);
@@ -18,6 +19,14 @@ export class FilmRepository {
     return { ...rest, id: id.toString() };
   };
 
+  findOne = async (
+    filters: Record<string, unknown>,
+    projection: Record<string, boolean> = {}
+  ): Promise<IFilm | null> => {
+    const results = await this.baseRepository.find(filters, projection, { skip: 0, limit: 1 });
+    return this.transformId(results[0] || null);
+  };
+
   getById = async (id: string, projection: Record<string, boolean>): Promise<IFilm | null> => {
     const idNumber = parseInt(id);
     if (isNaN(idNumber)) {
@@ -25,6 +34,11 @@ export class FilmRepository {
     }
     return this.transformId(await this.baseRepository.getById(idNumber, projection));
   };
+
+  create = async (data: ICreateFilm, projection: Record<string, boolean>) : Promise<IFilm | null> => {
+    const createFilm = await this.baseRepository.create(data, projection);
+    return this.transformId(createFilm);
+  }
 
   // SELECT CON PAGINACIÓN Y FILTERS
   find = async (
