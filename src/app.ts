@@ -3,15 +3,18 @@
 import express from 'express';
 // import { createConnection } from './config/db';
 // For PostgreSQL with Prisma uncomment the following line and comment the previous one
-import { createConnection } from './config/db.prisma';
+import cors from 'cors';
+import { CLIENT_URL } from './config/config';
 import { baseRouter } from './routes/base.routes';
 
 // Initialize express
 export const app = express();
 app.disable('x-powered-by');
 
-//Connectar a la BBDD
-await createConnection();
+// Allow cors for all connections (development)
+app.use(cors());
+// Allow cors for especific client url (production)
+app.use(cors({ origin: CLIENT_URL }));
 
 app.get('/ping', (req, res) => res.send('pong'));
 

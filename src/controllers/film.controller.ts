@@ -56,6 +56,28 @@ export class FilmController {
       next(error)
     }
   }
+
+  getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    logger.debug(`FilmController: Received getById request for films with id: ${JSON.stringify(req.params.id)}`);
+    try {
+      const { id } = req.params;
+      const film = await this.filmService.getById(id);
+      const response = {
+        message: `Film with ${id} fetched Successfully`,
+        data: film,
+      }
+      res.send(response);
+    } catch (error) {
+      logger.debug(`FilmController: Error fetching film`);
+      if (!(error instanceof AppError)) {
+        error = new AppError('Error fetching film', httpStatus.INTERNAL_SERVER_ERROR, {
+          originalError: error,
+        })
+      }
+      next(error);
+    }
+  }
+
   getAllWithPagination = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     logger.debug(`FilmController: Received getAllWithPagination request with query: ${JSON.stringify(req.query)}`);
 
