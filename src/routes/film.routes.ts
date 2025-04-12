@@ -12,5 +12,6 @@ export const filmRouter = Router()
 // GET /films - Retrieve all films with optional pagination
 filmRouter.get('/notpaginate', validate(FilmValidator.filmPaginationSchema, ValidationSource.QUERY),filmController.getAll);
 filmRouter.get('/', validate(FilmValidator.filmPaginationSchema, ValidationSource.QUERY),filmController.getAllWithPagination);
+filmRouter.get('/:id', validate(FilmValidator.filmIdSchema, ValidationSource.PARAMS),filmController.getById);
 filmRouter.post('/', validate(FilmValidator.filmCreateSchema, ValidationSource.BODY),filmController.create);
 

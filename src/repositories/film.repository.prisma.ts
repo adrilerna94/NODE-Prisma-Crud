@@ -27,12 +27,9 @@ export class FilmRepository {
     return this.transformId(results[0] || null);
   };
 
-  getById = async (id: string, projection: Record<string, boolean>): Promise<IFilm | null> => {
-    const idNumber = parseInt(id);
-    if (isNaN(idNumber)) {
-      throw new AppError('Invalid ID', 400);
-    }
-    return this.transformId(await this.baseRepository.getById(idNumber, projection));
+  getById = async (id: number, projection: Record<string, boolean>): Promise<IFilm | null> => {
+
+    return this.transformId(await this.baseRepository.getById(id, projection));
   };
 
   create = async (data: ICreateFilm, projection: Record<string, boolean>) : Promise<IFilm | null> => {

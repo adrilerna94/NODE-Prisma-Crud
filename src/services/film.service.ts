@@ -40,6 +40,7 @@ export class FilmService {
     }
   }
 
+
   private readonly normalizeFilmData = (data: ICreateFilm): ICreateFilm => {
     const normalizedData = { ...data };
 
@@ -98,6 +99,22 @@ export class FilmService {
     );
     return this.filmRepository.find(filters, projection, pagination);
   };
+
+  getById = async (id: string) => {
+    /*
+      parseInt empieza desde el primer carácter. Si el primer carácter no es un número válido, el parseo falla inmediatamente y devuelve NaN.
+    */
+    // const idNumber = parseInt(id); // 144abc valido abc144
+    const idNumber = Number(id);
+    if (!Number.isInteger(idNumber)) {
+      throw new AppError('Invalid ID', 400);
+    }
+    const film = await this.filmRepository.getById(idNumber, this.createProjection);
+    if (!film) {
+      throw new AppError('Film not found', 404);
+    }
+    return film;
+  }
 
   create = async (data: ICreateFilm) => {
     const normalizedData = this.normalizeFilmData(data);
