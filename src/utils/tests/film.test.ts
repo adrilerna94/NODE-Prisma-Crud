@@ -8,6 +8,10 @@ beforeAll(async () => {
   await createConnection(); // crear conexión antes de todos los tests
 });
 
+// funció que ens permet eliminar les películes creades per fer els tests a partir d'un array de titles de les pelicules.
+// anirem afegint títols de películes en el moment de la creació
+// Al final (afterAll), eliminarem d'un cop totes les películes creades.
+// gràcies al mètode deleteMany de prisma
 async function deleteFilmMockData(...films: string []) {
   await prisma.film.deleteMany({
     where: {
@@ -91,7 +95,7 @@ describe('GET /api/v1/films/:id', () => {
 
     expect(res.body.error).toBe('Invalid ID');
   });
-  
+
   it('should return 404 if Film is not found', async () => {
     const res = await request(app)
       .get('/api/v1/films/40000')
