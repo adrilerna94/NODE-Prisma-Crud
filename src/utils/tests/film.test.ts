@@ -12,7 +12,7 @@ beforeAll(async () => {
 // anirem afegint títols de películes en el moment de la creació
 // Al final (afterAll), eliminarem d'un cop totes les películes creades.
 // gràcies al mètode deleteMany de prisma
-async function deleteFilmMockData(...films: string []) {
+async function deleteFilmMockData(...films: string []) : Promise<void>{
   await prisma.film.deleteMany({
     where: {
       title: {
