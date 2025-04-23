@@ -35,6 +35,22 @@ export class BaseRepository<T, ICreateFilm, Delegate extends IRepositoryDelegate
       select: projection,
     });
   }
+  // utilizamos la misma interface que con create asi podemos actualizar solo con los campos requeridos
+  update(id: number, data:ICreateFilm, projection: Record <string, boolean>): Promise <T | null> {
+    return this.delegate.update({
+      where: { id },
+      data,
+      select: projection
+    });
+  }
+
+  delete(id: number, projection: Record <string, boolean>): Promise <T | null> {
+    return this.delegate.delete({
+      where: { id },
+      select: projection
+    });
+  }
+
 
   find(
     filters: Record<string, unknown>,

@@ -36,6 +36,52 @@ export class FilmController {
     }
   };
 
+  update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    logger.debug(`Controller: Received request to update an existing film with ID ${JSON.stringify(req.params.id)}`);
+    try {
+      const { id } = req.params;
+      const data = req.body;
+      const film = await this.filmService.update(id, data);
+
+      const response = {
+        message: 'film updated successfully',
+        data: film,
+      };
+      res.status(httpStatus.OK).send(response);
+    } catch (error) {
+      logger.debug({ body: req.body }, 'FilmController: Error updating film');
+      if (!(error instanceof AppError)) {
+        error = new AppError('Error updating film', httpStatus.INTERNAL_SERVER_ERROR, {
+          body: req.body,
+          originalError: error,
+        });
+      }
+      next(error);
+    }
+  };
+  delete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    logger.debug(`FilmController: Received request to delete an existing film with ID ${JSON.stringify(req.params.id)}`);
+    try {
+      const { id } = req.params;
+      const film = await this.filmService.delete(id);
+
+      const response = {
+        message: 'film deleted successfully',
+        data: film,
+      };
+      res.status(httpStatus.OK).send(response);
+    } catch (error) {
+      logger.debug({ body: req.body }, 'FilmController: Error deleting film');
+      if (!(error instanceof AppError)) {
+        error = new AppError('Error deleting film', httpStatus.INTERNAL_SERVER_ERROR, {
+          body: req.body,
+          originalError: error,
+        });
+      }
+      next(error);
+    }
+  };
+
   getAll = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     logger.debug(`Controller: Received getAll request for films with query: ${JSON.stringify(req.query)}`)
     try {

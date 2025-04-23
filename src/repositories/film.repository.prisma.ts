@@ -28,13 +28,23 @@ export class FilmRepository {
   };
 
   getById = async (id: number, projection: Record<string, boolean>): Promise<IFilm | null> => {
-
     return this.transformId(await this.baseRepository.getById(id, projection));
   };
 
   create = async (data: ICreateFilm, projection: Record<string, boolean>) : Promise<IFilm | null> => {
     const createFilm = await this.baseRepository.create(data, projection);
     return this.transformId(createFilm);
+  }
+  // UPDATE
+  update = async (id: number, data: ICreateFilm, projection: Record <string, boolean>) : Promise <IFilm | null> =>{
+    const updateFilm = await this.baseRepository.update(id, data, projection);
+    return this.transformId(updateFilm);
+  }
+
+  // DELETE
+  delete = async (id: number, projection: Record <string, boolean>) : Promise <IFilm | null> =>{
+    const deletedFilm = await this.baseRepository.delete(id, projection);
+    return this.transformId(deletedFilm);
   }
 
   // SELECT CON PAGINACIÓN Y FILTERS

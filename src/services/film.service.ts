@@ -142,4 +142,46 @@ export class FilmService {
     return createdFilm;
   };
 
+  update = async (id: string, data: ICreateFilm) => {
+    const idNumber = Number(id);
+    if (!Number.isInteger(idNumber)) {
+      throw new AppError('Invalid ID', 400);
+    }
+    const film = await this.filmRepository.getById(idNumber, this.createProjection);
+    if (!film) {
+      throw new AppError('Film not found', 404);
+    }
+    // normalized data
+    const normalizedData = this.normalizeFilmData(data);
+    // update film
+    const updatedFilm = await this.filmRepository.update(idNumber,normalizedData, this.createProjection);
+    if (!updatedFilm) {
+      logger.warn(`Film updated with ID ${id} failed`);
+      throw new AppError('Film update failed', httpStatus.INTERNAL_SERVER_ERROR);
+    }
+    logger.info(`Film updated successfully: "${updatedFilm.title}"`);
+    return updatedFilm;
+  }
+
+  delete = async (id: string) => {
+    const idNumber = Number(id);
+    if (!Number.isInteger(idNumber)) {
+      throw new AppError('Invalid ID', 400);
+    }
+    const film = await this.filmRepository.getById(idNumber, this.createProjection);
+    if (!film) {
+      throw new AppError('Film not found', 404);
+    }
+
+    // delete film
+    const deletedFilm = await this.filmRepository.delete(idNumber, this.createProjection);
+
+    if (!deletedFilm) {
+      logger.warn(`Film delted with ID ${id} failed`);
+      throw new AppError('Film delete failed', httpStatus.INTERNAL_SERVER_ERROR);
+    }
+    logger.info(`Film deleted successfully: "${deletedFilm.title}"`);
+    return deletedFilm;
+  }
+
 }
