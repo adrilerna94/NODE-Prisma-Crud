@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx watch --env-file=.env ./src/server.ts",
-    "start": "node --env-file=.env ./dist/server.js",
+    "start": "node ./dist/server.js",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "format": "prettier --write src",
